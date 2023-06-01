@@ -14,7 +14,7 @@
 <meta property="og:description" content="目录1.头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码 一个项目所有头文件都需要自编译，不应要求在构建时使用特殊条件来包含头文件 当头文件中有需要实例化的内联函数（便于编译器直接插入）或模板（防止编译错误）时，必须在头文件中定义  1.2 #define 保护 所有的头文件都应该有保护措施（宏保护） 宏保护的定义应当是项目源代码的完整路径（唯一">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-01T01:26:20.000Z">
-<meta property="article:modified_time" content="2023-06-01T02:04:47.535Z">
+<meta property="article:modified_time" content="2023-06-01T02:07:20.015Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -108,8 +108,8 @@
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> FOO_BAR_BAZ_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> FOO_BAR_BAZ_H</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 
-<p>可以上述的头文件路径为&#x2F;src&#x2F;bar&#x2F;baz.h foo</p>
-<h3 id="1-3-只引用使用的头文件"><a href="#1-3-只引用使用的头文件" class="headerlink" title="1.3 只引用使用的头文件"></a>1.3 只引用使用的头文件</h3><h3 id="1-4-前向声明"><a href="#1-4-前向声明" class="headerlink" title="1.4 前向声明"></a>1.4 前向声明</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<p>上述的头文件路径为&#x2F;src&#x2F;bar&#x2F;baz.h foo</p>
+<h3 id="1-3-只引用使用的头文件"><a href="#1-3-只引用使用的头文件" class="headerlink" title="1.3 只引用使用的头文件"></a>1.3 只引用使用的头文件</h3><h3 id="1-4-前向声明"><a href="#1-4-前向声明" class="headerlink" title="1.4 前向声明"></a>1.4 前向声明</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a><br>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 
       
     </div>
