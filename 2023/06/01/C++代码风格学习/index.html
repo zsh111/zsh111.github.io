@@ -6,16 +6,17 @@
   
   <title>C++代码风格学习 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="目录推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。 vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1.头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码 一个项目所有头文件都需要自编译，不">
+  <meta name="description" content="目录推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。 vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码 一个项目所有头文件都需要自编译，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++代码风格学习">
 <meta property="og:url" content="http://example.com/2023/06/01/C++%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="目录推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。 vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1.头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码 一个项目所有头文件都需要自编译，不">
+<meta property="og:description" content="目录推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。 vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码 一个项目所有头文件都需要自编译，">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-06-01T01:26:20.000Z">
-<meta property="article:modified_time" content="2023-06-04T07:47:34.773Z">
+<meta property="article:modified_time" content="2023-06-06T03:18:18.801Z">
 <meta property="article:author" content="zsh">
+<meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -63,12 +64,12 @@
       <nav id="sub-nav">
         
         
-          <a class="nav-icon" href="/atom.xml" title="RSS-hírfolyam"><span class="fa fa-rss"></span></a>
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
         
-        <a class="nav-icon nav-search-btn" title="Keresés"><span class="fa fa-search"></span></a>
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Keresés"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
       </div>
     </div>
   </div>
@@ -99,7 +100,7 @@
       
         <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p>推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。</p>
 <p>vscode 配置 C++17：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33899456/article/details/117966490">https://blog.csdn.net/qq_33899456/article/details/117966490</a></p>
-<h2 id="1-头文件"><a href="#1-头文件" class="headerlink" title="1.头文件"></a>1.头文件</h2><h3 id="1-1-独立性"><a href="#1-1-独立性" class="headerlink" title="1.1 独立性"></a>1.1 独立性</h3><ul>
+<h2 id="1-头文件"><a href="#1-头文件" class="headerlink" title="1. 头文件"></a>1. 头文件</h2><h3 id="1-1-独立性"><a href="#1-1-独立性" class="headerlink" title="1.1 独立性"></a>1.1 独立性</h3><ul>
 <li>头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码</li>
 <li>一个项目所有头文件都需要自编译，不应要求在构建时使用特殊条件来包含头文件</li>
 <li>当头文件中有需要实例化的内联函数（便于编译器直接插入）或模板（防止编译错误）时，必须在头文件中定义</li>
@@ -108,7 +109,7 @@
 <li>所有的头文件都应该有保护措施（宏保护）</li>
 <li>宏保护的定义应当是项目源代码的完整路径（唯一性），示例：</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> FOO_BAR_BAZ_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> FOO_BAR_BAZ_H</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> FOO_BAR_BAZ_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> FOO_BAR_BAZ_H</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>上述的头文件路径为&#x2F;src&#x2F;bar&#x2F;baz.h foo</p>
 <h3 id="1-3-只引用使用的头文件"><a href="#1-3-只引用使用的头文件" class="headerlink" title="1.3 只引用使用的头文件"></a>1.3 只引用使用的头文件</h3><ul>
@@ -129,10 +130,10 @@
 <li>前向声明可以隐藏依赖项，会在更改头文件时，跳过必要的重新编译</li>
 <li>与 include 相比，前向声明会使得自动化工具（CMake 等等）难以发现定义该符号的模块</li>
 <li>对 lib 的更改可能会破坏前向声明，函数和模板的前向声明会妨碍管理者对 API 进行其他兼容性的更改（如扩展参数类型…）</li>
-<li>从命名空间 std::进行前向声明会产生未定义的行为</li>
+<li>从命名空间 std:: 进行前向声明会产生未定义的行为</li>
 <li>很难确定是否需要一个前向声明或一个完整的#include。使用前向声明代替#include 会悄无声息的改变代码的含义</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.h:</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">D</span> : B &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// good_user.cc:</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;b.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(B*)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">void</span>*)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(D* x)</span> </span>&#123; <span class="built_in">f</span>(x); &#125;  <span class="comment">// Calls f(B*)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.h:</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> &#123;&#125;; </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">D</span> : B &#123;&#125;; </span><br><span class="line"></span><br><span class="line"><span class="comment">// good_user.cc:</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;b.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(B*)</span></span>; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">void</span>*)</span></span>; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(D* x)</span> </span>&#123; <span class="built_in">f</span>(x); &#125;  <span class="comment">// Calls f(B*)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>如果#include 替换成前向声明 B 和 D，test()将会调用 f(void *)</p>
 <ul>
@@ -160,32 +161,77 @@
 <p>上述头文件的项路径为google-awesome-project&#x2F;src&#x2F;base&#x2F;logging.h。</p>
 <p>示例：dir&#x2F;foo.cc 或dir&#x2F;foo_test.cc，是dir2&#x2F;foo2.h的实现，那么include目录为：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;dir2/foo2.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span> <span class="comment">//C语言系统头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;algorithm&gt;</span><span class="comment">//C++标准头文件，无.h</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;base/basictypes.h&quot;</span><span class="comment">//其他库的.h文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&quot;foo/server/bar.h&quot;</span><span class="comment">//项目的头文件</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <p>标准包括空行，这种顺序有助于找出崩溃的包含，保证了构建中断优先发生在相关的头文件中。</p>
 <ul>
 <li>部分头文件既有C语言格式也有C++格式，引用遵循现有的规则。每一个部分的include按字母排序。示例：google-awesome-project&#x2F;src&#x2F;foo&#x2F;internal&#x2F;fooserver.cc的引用头文件：</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;foo/server/fooserver.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;base/basictypes.h&quot;</span><span class="comment">//同一部分按字母排序</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;foo/server/bar.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;third_party/absl/flags/flag.h&quot;</span></span></span><br></pre></td></tr></table></figure>
 
-<h4 id="特别的"><a href="#特别的" class="headerlink" title="特别的"></a>特别的</h4><p>有时，系统特定的代码需要条件include，这样的代码include在其他include之后。示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;foo/public/fooserver.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;base/port.h&quot;</span>  <span class="comment">// For LANG_CXX11.</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> LANG_CXX11</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span>  <span class="comment">// LANG_CXX11</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="特殊条件"><a href="#特殊条件" class="headerlink" title="特殊条件"></a>特殊条件</h4><p>有时，系统特定的代码需要条件include，这样的代码include在其他include之后。示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;foo/public/fooserver.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;base/port.h&quot;</span>  <span class="comment">// For LANG_CXX11.</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> LANG_CXX11</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span>  <span class="comment">// LANG_CXX11</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="2-作用域"><a href="#2-作用域" class="headerlink" title="2.作用域"></a>2.作用域</h2><h3 id="2-1命名空间"><a href="#2-1命名空间" class="headerlink" title="2.1命名空间"></a>2.1命名空间</h3><ul>
 <li>除了少数例外，将代码放在命名空间内。命名空间应根据项目名称和可能路径具有唯一的名称。不要使用using命令</li>
 </ul>
 <h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>命名空间将全局作用域分为多个命名作用域，有助于防止全局的命名冲突。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>命名空间为大型项目中使用合理的短名称（避免了命名冲突）如：如果在全局方范围内有两个foo类，则会在编译或运行时发生冲突。将其放在两个命名空间内，如project1::foo，project2::foo。同时每个命名空间可以使用没有前缀的foo</li>
+<li>内联命名空间会自动将它们的name放在封闭环境内，如：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> outer &#123;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">namespace</span> inner &#123;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line">&#125;  <span class="comment">// namespace inner</span></span><br><span class="line">&#125;  <span class="comment">// namespace outer</span></span><br></pre></td></tr></table></figure>
+
+<p>outer::inner::foo()等价于outer::foo()。</p>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>命名空间使得定义机制变得复杂（较长的前缀）</li>
+<li>内联命名空间容易让人感到困惑（name并不受限于它们的命名空间）一般只用于大版本命名策略中的一部分</li>
+<li>某些情况下，需要完全限定名称来重复引用符号。对于深度嵌套的命名空间（如name1::name2::foo），会增加许多杂乱代码</li>
+</ul>
+<h4 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h4><p>综上所述，命名空间的使用规则为：</p>
+<ul>
+<li>遵循命名空间的命名规则</li>
+<li>使用注释打断多行命名空间，如下：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// In the .h file</span></span><br><span class="line"><span class="keyword">namespace</span> mynamespace &#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">// All declarations are within the namespace scope.</span></span><br><span class="line"><span class="comment">// Notice the lack of indentation.</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">Foo</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#125;  <span class="comment">// namespace mynamespace</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>命名空间在include、gFlag定义&#x2F;声明和其他命名空间类的声明后对整个源文件进行包装，如下：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// In the .cc file</span></span><br><span class="line"><span class="keyword">namespace</span> mynamespace &#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Definition of functions is within scope of the namespace.</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyClass::Foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;  <span class="comment">// namespace mynamespace</span></span><br></pre></td></tr></table></figure>
+
+<p>更为复杂度的源文件示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;a.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">ABSL_FLAG</span>(<span class="type">bool</span>, someflag, <span class="literal">false</span>, <span class="string">&quot;a flag&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> mynamespace &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> ::foo::Bar;</span><br><span class="line"></span><br><span class="line">...code <span class="keyword">for</span> mynamespace...    <span class="comment">// Code goes against the left margin.</span></span><br><span class="line"></span><br><span class="line">&#125;  <span class="comment">// namespace mynamespace</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在Protocol Buffers中，可以使用.proto文件中的包声明指定生成的协议消息代码的命名空间（详见Protocol Buffers）</li>
+<li>不要在std命名空间中声明任何内容，如果要强行声明需要包含适当的头文件。</li>
+<li>不要使用using使命名空间中所有名称都可用</li>
+<li>不要在头文件的命名空间范围内使用命名空间的别名，除非是显示标记为仅内部命名空间的情况。示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Forbidden -- This pollutes the namespace.</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> foo;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Shorten access to some commonly used names in .cc files.</span></span><br><span class="line"><span class="keyword">namespace</span> baz = ::foo::bar::baz;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Shorten access to some commonly used names (in a .h file).</span></span><br><span class="line"><span class="keyword">namespace</span> librarian &#123;</span><br><span class="line"><span class="keyword">namespace</span> impl &#123;  <span class="comment">// Internal, not part of the API.</span></span><br><span class="line"><span class="keyword">namespace</span> sidetable = ::pipeline_diagnostics::sidetable;</span><br><span class="line">&#125;  <span class="comment">// namespace impl</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">my_inline_function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// namespace alias local to a function (or method).</span></span><br><span class="line">  <span class="keyword">namespace</span> baz = ::foo::bar::baz;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line">&#125;  <span class="comment">// namespace librarian</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>不要使用内联命名空间</li>
+<li>使用带有internal的命名空间标记API的内部实现部分</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// We shouldn&#x27;t use this internal name in non-absl code.only use in absl internal</span></span><br><span class="line"><span class="keyword">using</span> ::absl::container_internal::ImplementationDetail;</span><br></pre></td></tr></table></figure>
+
+<h3 id="内部链接"><a href="#内部链接" class="headerlink" title="内部链接"></a>内部链接</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <style>
 p{text-indent:2em}
+
     </style>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/06/01/C++%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E5%AD%A6%E4%B9%A0/" data-id="clifn6nxt00022ctee8st0z8q" data-title="C++代码风格学习" class="article-share-link"><span class="fa fa-share">Megosztás</span></a>
+      <a data-url="http://example.com/2023/06/01/C++%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E5%AD%A6%E4%B9%A0/" data-id="clifn6nxt00022ctee8st0z8q" data-title="C++代码风格学习" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
     </footer>
   </div>
   
@@ -194,7 +240,7 @@ p{text-indent:2em}
   
   
     <a href="/2023/06/01/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Régebbi</strong>
+      <strong class="article-nav-caption">Älter</strong>
       <div class="article-nav-title">Hello World</div>
     </a>
   
@@ -212,13 +258,27 @@ p{text-indent:2em}
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 10px;">C++</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archív</h3>
+    <h3 class="widget-title">Archiv</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">June 2023</a></li></ul>
     </div>
@@ -228,7 +288,7 @@ p{text-indent:2em}
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Legfrissebb bejegyzések</h3>
+    <h3 class="widget-title">letzter Beitrag</h3>
     <div class="widget">
       <ul>
         
