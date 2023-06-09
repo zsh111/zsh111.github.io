@@ -233,7 +233,27 @@
 <li>有时定义一个不绑定到类实例的函数是很用的。这样的函数可以是静态成员函数或非成员函数。非成员函数不依赖外部变量并且总是存在于命名空间内。不要为了分组静态成员而创建类</li>
 <li>如果定义一个非成员函数，并且只在对应的.cc文件中使用，使用内部链接限制其作用域</li>
 </ul>
-<h3 id="2-4-局部变量"><a href="#2-4-局部变量" class="headerlink" title="2.4 局部变量"></a>2.4 局部变量</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<h3 id="2-4-局部变量"><a href="#2-4-局部变量" class="headerlink" title="2.4 局部变量"></a>2.4 局部变量</h3><ul>
+<li>将函数的变量尽可能放在小的作用域内，并在声明时进行初始化</li>
+<li>C++允许在任何地方声明变量，但是鼓励在局部作用域内声明变量，并尽可能接近使用的位置（方便阅读）。此外，推荐使用初始化代替声明和赋值。示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i;</span><br><span class="line">i = <span class="built_in">f</span>();      <span class="comment">// Bad -- initialization separate from declaration.</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> i = <span class="built_in">f</span>();  <span class="comment">// Good -- declaration has initialization.</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> jobs = <span class="built_in">NumJobs</span>();</span><br><span class="line"><span class="comment">// More code...</span></span><br><span class="line"><span class="built_in">f</span>(jobs);      <span class="comment">// Bad -- declaration separate from use.</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> jobs = <span class="built_in">NumJobs</span>();</span><br><span class="line"><span class="built_in">f</span>(jobs);      <span class="comment">// Good -- declaration immediately (or closely) followed by use.</span></span><br><span class="line"></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; v;</span><br><span class="line">v.<span class="built_in">push_back</span>(<span class="number">1</span>);  <span class="comment">// Prefer initializing using brace initialization.</span></span><br><span class="line">v.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; v = &#123;<span class="number">1</span>, <span class="number">2</span>&#125;;  <span class="comment">// Good -- v starts initialized.</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>if、while、for语句的变量通常在语句中声明，以便变量仅限于这些作用域。示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="type">const</span> <span class="type">char</span>* p = <span class="built_in">strchr</span>(str, <span class="string">&#x27;/&#x27;</span>)) str = p + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es：如果变量是一个对象，每次进入作用域被创建时，都会调用构造函数，每次出作用域时，都会调用析构函数。示例如下：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Inefficient implementation:</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; ++i) &#123;</span><br><span class="line">  Foo f;  <span class="comment">// My ctor and dtor get called 1000000 times each.</span></span><br><span class="line">  f.<span class="built_in">DoSomething</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Foo f;  <span class="comment">// My ctor and dtor get called once each.</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; ++i) &#123;</span><br><span class="line">  f.<span class="built_in">DoSomething</span>(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-静态变量和全局变量"><a href="#2-5-静态变量和全局变量" class="headerlink" title="2.5 静态变量和全局变量"></a>2.5 静态变量和全局变量</h3><ul>
+<li>禁止定义具有静态存储期的对象（程序运行时一直存在的存储方式）。不鼓励在命名空间或静态类成员变量中使用动态初始化</li>
+<li>如果一个全局变量的声明可以视作编译时常量（constexpr），可以视作平凡销毁。</li>
+</ul>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <style>
 p{text-indent:2em}
