@@ -61,10 +61,10 @@
         
           <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
         
-        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
       </div>
     </div>
   </div>
@@ -327,7 +327,42 @@
 <li>不需要担心类是否已经初始化</li>
 <li>通过构造函数调用完全初始化的对象可以是const的，并且可能更容易与stl容器或算法一起使用</li>
 </ul>
-<h4 id="缺点-5"><a href="#缺点-5" class="headerlink" title="缺点"></a>缺点</h4><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<h4 id="缺点-5"><a href="#缺点-5" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>如果一个类调用虚函数，这些调用不会被分派到子类的实现（可能会调用父类的虚函数而不是子类的虚函数）。即使当前类没有被子类化，未来对该类的修改也可能造成该问题</li>
+<li>构造函数，返回错误信息并不容易：1.程序崩溃（并不合适）2.使用异常（禁止）</li>
+<li>如果构造函数内work失败，现在有一个初始化失败的对象，它可能是一个不寻常的状态，需要一个bool isvalid（）状态检查机制（容易忘记调用）</li>
+<li>不能获取构造函数的地址，因此无论构造函数内完成任何work，都不能轻易地移交出去（如移交到另一个线程）</li>
+</ul>
+<h4 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a>总结</h4><p>构造函数永远不应该调用虚函数。如果需要在对象创建时执行一些操作，可以考虑使用工厂函数或init（）方法（终止程序进行错误处理）。</p>
+<h3 id="3-2-隐式类型转换"><a href="#3-2-隐式类型转换" class="headerlink" title="3.2 隐式类型转换"></a>3.2 隐式类型转换</h3><p>不要定义隐式类型转换。对转换运算符和单参数构造函数使用explicit关键字</p>
+<h4 id="定义-5"><a href="#定义-5" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>隐式类型转换允许在需要不同类型（目标类型）时使用一个类型（源类型）对象。</li>
+<li>除了编程语言自定义的隐式类型转换外，用户可以通过添加适当的成员到源类型或目标类型的类定义中来定义自己的隐式转换。源类型的隐式转换由类型转换运算符定义，如operator bool（）。目标类型中隐式转换有一个只能接受源类型作为唯一参数（或唯一参数没有默认值）的构造函数定义</li>
+<li>explicit关键字可以应用于狗构造函数或转换运算符，确保只有当目标类型在使用点是显示的时候才能使用它，如：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">Foo</span><span class="params">(<span class="type">int</span> x, <span class="type">double</span> y)</span></span>;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Func</span><span class="params">(Foo f)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Func</span>(&#123;<span class="number">42</span>, <span class="number">3.14</span>&#125;);  <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+
+<p>上面error代码并不属于隐式转换，但编程语言将之视作隐式转换处理</p>
+<h4 id="优点-6"><a href="#优点-6" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>隐式转换能够提高类型的可用性和表达性</li>
+<li>隐式转换可以是重载的一种更简单的替代方式，如当一个带string_view参数的函数替代string和const char* 的单独重载时</li>
+</ul>
+<h4 id="缺点-6"><a href="#缺点-6" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>隐式转换会隐藏类型不匹配的错误（不容易被发现）</li>
+<li>降低代码的可读性，特别是存在重载时</li>
+<li>单个参数的构造函数可能意外地用做隐式类型转换</li>
+<li>但一个单参数的构造函数没有使用explicit关键字时，就难以判断是用来定义隐式转换的还是忘加了</li>
+<li>隐式转换会导致调用点的模糊</li>
+<li>如果目标类型是隐式的，列表初始化可能会遇到相同的问题，特别是对单元素</li>
+</ul>
+<h4 id="总结-8"><a href="#总结-8" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>类定义中，类型转换运算符和可使用单参数调用的构造函数必须标记为explicit。拷贝构造和移动构造不应该标记为explicit，因为它们不执行类型转换</li>
+<li>某些情况下，隐式转换是必要且适当的，特别是对于被设为可互换的类型，如当两种类型的对象相同只是底层值不同时，这种情况需要同leader交流使用隐式类型转换</li>
+<li>在C++中，如果构造函数不能使用单参数调用，可以省略explicit关键字。而且，如果构造函数接受单一的std::initializer_list参数，为了支持拷贝初始化（如MyType m &#x3D; {1, 2};），也应该省略explicit</li>
+</ul>
+<h3 id="3-3-Copyable-and-Movable类型"><a href="#3-3-Copyable-and-Movable类型" class="headerlink" title="3.3 Copyable and Movable类型"></a>3.3 Copyable and Movable类型</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <style>
 p{text-indent:2em}
@@ -337,7 +372,7 @@ p{text-indent:2em}
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/06/01/C++%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E5%AD%A6%E4%B9%A0/" data-id="clirkgb2u0002p4te976b8ewd" data-title="C++代码风格学习" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2023/06/01/C++%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E5%AD%A6%E4%B9%A0/" data-id="clirkgb2u0002p4te976b8ewd" data-title="C++代码风格学习" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -390,7 +425,7 @@ p{text-indent:2em}
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/06/01/hello-world/" data-id="clirkgb2s0001p4teezpdcodc" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2023/06/01/hello-world/" data-id="clirkgb2s0001p4teezpdcodc" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -432,7 +467,7 @@ p{text-indent:2em}
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archiv</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">June 2023</a></li></ul>
     </div>
@@ -442,7 +477,7 @@ p{text-indent:2em}
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">letzter Beitrag</h3>
     <div class="widget">
       <ul>
         
