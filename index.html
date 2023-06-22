@@ -362,7 +362,12 @@
 <li>某些情况下，隐式转换是必要且适当的，特别是对于被设为可互换的类型，如当两种类型的对象相同只是底层值不同时，这种情况需要同leader交流使用隐式类型转换</li>
 <li>在C++中，如果构造函数不能使用单参数调用，可以省略explicit关键字。而且，如果构造函数接受单一的std::initializer_list参数，为了支持拷贝初始化（如MyType m &#x3D; {1, 2};），也应该省略explicit</li>
 </ul>
-<h3 id="3-3-Copyable-and-Movable类型"><a href="#3-3-Copyable-and-Movable类型" class="headerlink" title="3.3 Copyable and Movable类型"></a>3.3 Copyable and Movable类型</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<h3 id="3-3-Copyable-and-Movable类型"><a href="#3-3-Copyable-and-Movable类型" class="headerlink" title="3.3 Copyable and Movable类型"></a>3.3 Copyable and Movable类型</h3><p>类的公共API必须明确表示该类是可赋复制的、只能移动的、还是既不能复制也不能移动。如果这些操作对类是有意义的，那么应支持复制或移动操作</p>
+<h4 id="定义-6"><a href="#定义-6" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>C++中，一个可移动类型是指一个对象可以从临时对象进行初始化和赋值</li>
+<li>C++中，一个可复制对象是指一个对象可以从同一类型的任何其他对象进行初始化或赋值操作，严格要求源对象的值不发生改变。因此，可复制类型也被定义为可移动类型。如std::unique_ptr<int>是一个移动</li>
+</ul>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <style>
 p{text-indent:2em}
