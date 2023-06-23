@@ -366,6 +366,11 @@
 <h4 id="定义-6"><a href="#定义-6" class="headerlink" title="定义"></a>定义</h4><ul>
 <li>C++中，一个可移动类型是指一个对象可以从临时对象进行初始化和赋值</li>
 <li>C++中，一个可复制对象是指一个对象可以从同一类型的任何其他对象进行初始化或赋值操作，严格要求源对象的值不发生改变。因此，可复制类型也被定义为可移动类型。如std::unique_ptr<int>是一个移动</li>
+<li>对于用自定义类型，其复制行为由拷贝构造函数和拷贝赋值运算符定义。如果存在移动构造函数和移动赋值运算符，则移动行为由它们定义；否则，移动由拷贝构造和拷贝赋值运算符定义</li>
+<li>某些情况下，编译器可以隐式地调用复制&#x2F;移动构造函数，如按值传递对象时</li>
+</ul>
+<h4 id="优点-7"><a href="#优点-7" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>可复制和可移动对象可以按值传递和返回，API更简单、安全、通用。与传递对象时不同，通过指针或引用，不存在所有权混淆的风险、生存期、可变性和类似问题</li>
 </ul>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
