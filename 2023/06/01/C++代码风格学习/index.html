@@ -14,7 +14,7 @@
 <meta property="og:description" content="目录推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。 vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码 一个项目所有头文件都需要自编译，">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-06-01T01:26:20.000Z">
-<meta property="article:modified_time" content="2023-06-23T01:50:52.795Z">
+<meta property="article:modified_time" content="2023-06-24T02:31:58.745Z">
 <meta property="article:author" content="zsh">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
@@ -374,6 +374,28 @@
 </ul>
 <h4 id="优点-7"><a href="#优点-7" class="headerlink" title="优点"></a>优点</h4><ul>
 <li>可复制和可移动对象可以按值传递和返回，API更简单、安全、通用。与传递对象时不同，通过指针或引用，不存在所有权混淆的风险、生存期、可变性和类似问题</li>
+<li>复制&#x2F;移动构造和赋值运算符如1clone()、copyfrom()或swap()等替代方式更容易正确定义，它们可以使用编译器生成、隐式地或使用&#x3D;default。不需要堆分配或单独的初始化和赋值步骤.</li>
+<li>移动操作允许隐式并且有效地传递右值</li>
+</ul>
+<h4 id="缺点-7"><a href="#缺点-7" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>某些类型不需要可复制性。如表示单例对象、与特定作用域相关联的对象或与对象表示紧密耦合的对象。对于多态使用的基类类型，复制操作是有风险的（不建议使用默认的复制）</li>
+<li>复制构造函数会隐式调用，使得调用容易被忽略.同时可能会造成过度复制，影响性能</li>
+</ul>
+<h4 id="总结-9"><a href="#总结-9" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>每个类的public接口必须明确说明该类支持哪些复制和移动操作。（53原则要么均设定要么delete）</li>
+<li>对于可复制类必须explicit声明，仅支持移动操作的类同样需要explicit声明。不支持复制和移动的累应当explicit删除，同时如果有复制和移动操作，则必须提供相应的构造函数。示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Copyable</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Copyable</span>(<span class="type">const</span> Copyable&amp; other) = <span class="keyword">default</span>;</span><br><span class="line">  Copyable&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Copyable&amp; other) = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// The implicit move operations are suppressed by the declarations above.</span></span><br><span class="line">  <span class="comment">// You may explicitly declare move operations to support efficient moves.</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MoveOnly</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">MoveOnly</span>(MoveOnly&amp;&amp; other) = <span class="keyword">default</span>;</span><br><span class="line">  MoveOnly&amp; <span class="keyword">operator</span>=(MoveOnly&amp;&amp; other) = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// The copy operations are implicitly deleted, but you can</span></span><br><span class="line">  <span class="comment">// spell that out explicitly if you want:</span></span><br><span class="line">  <span class="built_in">MoveOnly</span>(<span class="type">const</span> MoveOnly&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">  MoveOnly&amp; <span class="keyword">operator</span>=(<span class="type">const</span> MoveOnly&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NotCopyableOrMovable</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">// Not copyable or movable</span></span><br><span class="line">  <span class="built_in">NotCopyableOrMovable</span>(<span class="type">const</span> NotCopyableOrMovable&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">  NotCopyableOrMovable&amp; <span class="keyword">operator</span>=(<span class="type">const</span> NotCopyableOrMovable&amp;)</span><br><span class="line">      = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// The move operations are implicitly disabled, but you can</span></span><br><span class="line">  <span class="comment">// spell that out explicitly if you want:</span></span><br><span class="line">  <span class="built_in">NotCopyableOrMovable</span>(NotCopyableOrMovable&amp;&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">  NotCopyableOrMovable&amp; <span class="keyword">operator</span>=(NotCopyableOrMovable&amp;&amp;)</span><br><span class="line">      = <span class="keyword">delete</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除&#x2F;声明被忽略的情况：<ul>
+<li>如果类没有private部分，那么可复制&#x2F;可移动可以由任何public数据成员的可复制&#x2F;可移动性决定</li>
+<li>如果基类不可复制和移动，那么派生类也不可移动或复制</li>
+<li>如果explicit声明或删除复制的构造函数或复制操作，其他复制操作不明显，则必须声明或删除。对移动操作也当如此</li>
+</ul>
+</li>
+<li>对于临时对象不清楚复制&#x2F;移动的结果，或者会产生其他费用，则类应当是不可移动&#x2F;复制的。（尽量避免定义移动操作）</li>
+<li></li>
 </ul>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
