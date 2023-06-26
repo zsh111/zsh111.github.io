@@ -392,7 +392,11 @@
 </ul>
 </li>
 <li>对于临时对象不清楚复制&#x2F;移动的结果，或者会产生其他费用，则类应当是不可移动&#x2F;复制的。（尽量避免定义移动操作）</li>
-<li></li>
+<li>为了消除切割的风险（基类无法访问派生类特有的成员或功能），最好将基类定义为抽象类，即将它们的构造函数声明为protected，将析构函数声明为protected，或者给它们添加一个或多个纯虚成员函数</li>
+</ul>
+<h3 id="3-4-Structs-VS-Classes"><a href="#3-4-Structs-VS-Classes" class="headerlink" title="3.4 Structs VS Classes"></a>3.4 Structs VS Classes</h3><ul>
+<li>struct用于表示仅承载数据的被动对象，将具有其他行为和功能的对象定义为class</li>
+<li>C++中struct和class关键字几乎相同，应根据所定义的数据类型选择适当的关键字（struct默认是public，class中默认为private）</li>
 </ul>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
