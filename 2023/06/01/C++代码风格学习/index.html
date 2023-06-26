@@ -14,7 +14,7 @@
 <meta property="og:description" content="目录推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。 vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码 一个项目所有头文件都需要自编译，">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-06-01T01:26:20.000Z">
-<meta property="article:modified_time" content="2023-06-26T07:07:12.758Z">
+<meta property="article:modified_time" content="2023-06-26T07:51:46.282Z">
 <meta property="article:author" content="zsh">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
@@ -400,7 +400,16 @@
 <h3 id="3-4-Structs-VS-Classes"><a href="#3-4-Structs-VS-Classes" class="headerlink" title="3.4 Structs VS Classes"></a>3.4 Structs VS Classes</h3><ul>
 <li>struct用于表示仅承载数据的被动对象，将具有其他行为和功能的对象定义为class</li>
 <li>C++中struct和class关键字几乎相同，应根据所定义的数据类型选择适当的关键字（struct默认是public，class中默认为private）</li>
+<li>struct遵循规则：用于被动、承载数据的对象，没有暗示字段之间关系的不变量，所有成员都是public，构造函数、析构函数和辅助方法不涉及或强制任何不变量</li>
+<li>为了与STL保持一致，在一些特殊情况可以使用struct替代class，同时两者有着不同的命名规则</li>
 </ul>
+<h3 id="3-5-Structs-vs-Pairs-and-Tuples"><a href="#3-5-Structs-vs-Pairs-and-Tuples" class="headerlink" title="3.5 Structs vs. Pairs and Tuples"></a>3.5 Structs vs. Pairs and Tuples</h3><ul>
+<li>在某些情况下，当元素具有有意义的名称时，优先使用struct而不是pair或tuple</li>
+<li>使用pair和tuple可以避免自定义类型的需要，但在阅读代码时，使用有意义的字段比使用first、second或std::get(x)更清晰，在C++14中引入了适用类型访问元组元素（类型唯一），使用有意义的字段更好</li>
+<li>在泛型编程中pair和tuple对于无具体意义的字段还是可以使用</li>
+</ul>
+<h3 id="3-6-继承"><a href="#3-6-继承" class="headerlink" title="3.6 继承"></a>3.6 继承</h3><p>许多情况下，组合比继承更加合适，在使用继承时，声明为public</p>
+<h4 id="定义-7"><a href="#定义-7" class="headerlink" title="定义"></a>定义</h4><p>当子类从基类继承时，它包含基类定义的所有数据和操作的定义</p>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <style>
