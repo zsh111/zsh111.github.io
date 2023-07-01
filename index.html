@@ -130,7 +130,7 @@
 <li>从命名空间 std:: 进行前向声明会产生未定义的行为</li>
 <li>很难确定是否需要一个前向声明或一个完整的#include。使用前向声明代替#include 会悄无声息的改变代码的含义</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.h:</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> &#123;&#125;; </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">D</span> : B &#123;&#125;; </span><br><span class="line"></span><br><span class="line"><span class="comment">// good_user.cc:</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;b.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(B*)</span></span>; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">void</span>*)</span></span>; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(D* x)</span> </span>&#123; <span class="built_in">f</span>(x); &#125;  <span class="comment">// Calls f(B*)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b.h:</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> &#123;&#125;; </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">D</span> : B &#123;&#125;; </span><br><span class="line"></span><br><span class="line"><span class="comment">// good_user.cc:</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;b.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(B*)</span></span>; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">void</span>*)</span></span>; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(D* x)</span> </span>&#123; <span class="built_in">f</span>(x); &#125;  <span class="comment">// Calls f(B*)</span></span><br></pre></td></tr></table></figure>
 
 <p>如果#include 替换成前向声明 B 和 D，test()将会调用 f(void *)</p>
 <ul>
@@ -168,7 +168,7 @@
 <h4 id="特殊条件"><a href="#特殊条件" class="headerlink" title="特殊条件"></a>特殊条件</h4><p>有时，系统特定的代码需要条件include，这样的代码include在其他include之后。示例：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;foo/public/fooserver.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;base/port.h&quot;</span>  <span class="comment">// For LANG_CXX11.</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> LANG_CXX11</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span>  <span class="comment">// LANG_CXX11</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="2-作用域"><a href="#2-作用域" class="headerlink" title="2.作用域"></a>2.作用域</h2><h3 id="2-1命名空间"><a href="#2-1命名空间" class="headerlink" title="2.1命名空间"></a>2.1命名空间</h3><ul>
+<h2 id="2-作用域"><a href="#2-作用域" class="headerlink" title="2. 作用域"></a>2. 作用域</h2><h3 id="2-1命名空间"><a href="#2-1命名空间" class="headerlink" title="2.1命名空间"></a>2.1命名空间</h3><ul>
 <li>除了少数例外，将代码放在命名空间内。命名空间应根据项目名称和可能路径具有唯一的名称。不要使用using命令</li>
 </ul>
 <h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>命名空间将全局作用域分为多个命名作用域，有助于防止全局的命名冲突。</p>
@@ -321,7 +321,7 @@
 <ul>
 <li>thread_local应该优于其他定义线程本地数据的方式</li>
 </ul>
-<h2 id="3-类"><a href="#3-类" class="headerlink" title="3.类"></a>3.类</h2><h3 id="3-1-构造函数内work"><a href="#3-1-构造函数内work" class="headerlink" title="3.1 构造函数内work"></a>3.1 构造函数内work</h3><p>在构造函数内避免虚函数调用，避免失败的初始化</p>
+<h2 id="3-类"><a href="#3-类" class="headerlink" title="3. 类"></a>3. 类</h2><h3 id="3-1-构造函数内work"><a href="#3-1-构造函数内work" class="headerlink" title="3.1 构造函数内work"></a>3.1 构造函数内work</h3><p>在构造函数内避免虚函数调用，避免失败的初始化</p>
 <h4 id="定义-4"><a href="#定义-4" class="headerlink" title="定义"></a>定义</h4><p>在构造函数内可以执行任何初始化操作</p>
 <h4 id="优点-5"><a href="#优点-5" class="headerlink" title="优点"></a>优点</h4><ul>
 <li>不需要担心类是否已经初始化</li>
@@ -420,17 +420,19 @@
 <li>多重继承在实践中常常带来较高的性能开销，而且容易造成菱形继承（多态影响性能：调用虚函数首先通过虚指针跳到虚函数表，再通过偏移找到函数真实地址，再执行（无法内联造成性能降低（编译器不知道指针指向的函数地址）））</li>
 </ul>
 <h4 id="总结-10"><a href="#总结-10" class="headerlink" title="总结"></a>总结</h4><ul>
-<li><p>使用继承时，通常选择public。如果需要使用private继承，可以选择在派生类中包含基类的实例作为成员变量。同时，用好final关键字，它用于标记类或成员不可被继承或重写。示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> <span class="keyword">final</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面的代码会导致编译错误，因为Derived试图继承final类Base</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
-<li><p>面向对象编程中，应当避免过度使用实现继承，多使用组合，只有类之间在语义上满足继承关系时，才应该使用继承。组合示例：</p>
+<li>使用继承时，通常选择public。如果需要使用private继承，可以选择在派生类中包含基类的实例作为成员变量。同时，用好final关键字，它用于标记类或成员不可被继承或重写。示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> <span class="keyword">final</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面的代码会导致编译错误，因为Derived试图继承final类Base</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>面向对象编程中，应当避免过度使用实现继承，多使用组合，只有类之间在语义上满足继承关系时，才应该使用继承。组合示例：</li>
+</ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Engine</span> &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Car</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Engine engine;  <span class="comment">// 使用组合将引擎作为成员变量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>控制类成员的可见性和访问权限，设计类成员时，合理使用修饰符限制成员的访问范围（对于类自己使用的成员使用private，用于派生类使用的变量使用protected）</p>
-</li>
-<li><p>派生类重写基类的虚函数或虚析构函数时，应该明确使用override和final关键字。不应该在重写时使用virtual。使用override和final原因：如果函数不是基类虚函数的重写，将无法通过编译，有助于捕捉错误</p>
-</li>
-<li><p>允许多重继承，但是不推荐</p>
-</li>
+
+<ul>
+<li>控制类成员的可见性和访问权限，设计类成员时，合理使用修饰符限制成员的访问范围（对于类自己使用的成员使用private，用于派生类使用的变量使用protected）</li>
+<li>派生类重写基类的虚函数或虚析构函数时，应该明确使用override和final关键字。不应该在重写时使用virtual。使用override和final原因：如果函数不是基类虚函数的重写，将无法通过编译，有助于捕捉错误</li>
+<li>允许多重继承，但是不推荐</li>
 </ul>
 <h3 id="3-7-运算符重载"><a href="#3-7-运算符重载" class="headerlink" title="3.7 运算符重载"></a>3.7 运算符重载</h3><h4 id="定义-8"><a href="#定义-8" class="headerlink" title="定义"></a>定义</h4><p>C++使用operator关键字声明运算符的重载，前提要求其中一个参数是用户定义的类型。同时operator关键字还允许用户定义新类型的字面量，使用operator””。下面是示例：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Distance</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Distance</span><span class="params">(<span class="type">double</span> meters)</span> : meters_(meters) &#123;</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">GetMeters</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> meters_;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">double</span> meters_;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 定义一个用户自定义字面量 &quot;km&quot;，用于表示千米</span></span><br><span class="line">Distance <span class="keyword">operator</span><span class="string">&quot;&quot;</span> _km(<span class="type">long</span> <span class="type">double</span> kilometers) &#123;</span><br><span class="line">    <span class="type">double</span> meters = kilometers * <span class="number">1000.0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Distance</span>(meters);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 使用用户定义字面量来创建 Distance 对象</span></span><br><span class="line">    Distance d = <span class="number">2.5</span>_km;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Distance in meters: &quot;</span> &lt;&lt; d.<span class="built_in">GetMeters</span>() &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -475,15 +477,14 @@
 <li>不要将大型方法定义内联在类定义中。</li>
 </ul>
 <h2 id="4-函数"><a href="#4-函数" class="headerlink" title="4. 函数"></a>4. 函数</h2><h3 id="4-1-输入和输出"><a href="#4-1-输入和输出" class="headerlink" title="4.1 输入和输出"></a>4.1 输入和输出</h3><ul>
-<li><p>函数返回通常由返回值确定，部分可以由输出参数（in&#x2F;out parameter）返回（如使用&amp;等）</p>
-</li>
-<li><p>使用返回值而不是输出参数更好，有助于提高可读性，并且可能会有更好的性能</p>
+<li>函数返回通常由返回值确定，部分可以由输出参数（in&#x2F;out parameter）返回（如使用&amp;等）</li>
+<li>使用返回值而不是输出参数更好，有助于提高可读性，并且可能会有更好的性能</li>
+</ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用值返回</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 使用参数返回</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">multiply</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span>&amp; result)</span> </span>&#123;</span><br><span class="line">    result = a * b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>优先返回值，其次返回引用，避免返回指针（除非可以为空）</p>
-</li>
-<li><p>函数参数既可以是输入，也可以是输出。non-optional输入参数应当为值或const引用，但non-optional输出和input&#x2F;output参数应当为引用（非空）。一般来说，如果一个参数是可选且按值传递的，可以使用std::optional来表示该参数，如果该参数是非可选并且原应该使用引用类型，可以使用const指针表示。对于可选的output和input&#x2F;output参数，可以使用非const指针来表示</p>
-</li>
+
+<ul>
+<li>优先返回值，其次返回引用，避免返回指针（除非可以为空）</li>
+<li>函数参数既可以是输入，也可以是输出。non-optional输入参数应当为值或const引用，但non-optional输出和input&#x2F;output参数应当为引用（非空）。一般来说，如果一个参数是可选且按值传递的，可以使用std::optional来表示该参数，如果该参数是非可选并且原应该使用引用类型，可以使用const指针表示。对于可选的output和input&#x2F;output参数，可以使用非const指针来表示</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//不可选参数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">calculateSum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//可选参数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printMessage</span><span class="params">(<span class="type">const</span> std::string&amp; message = <span class="string">&quot;&quot;</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">                  <span class="type">const</span> std::string&amp; prefix = <span class="string">&quot;--&gt;&quot;</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">                  <span class="type">const</span> std::string&amp; suffix = <span class="string">&quot;&lt;--&quot;</span>)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; prefix &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; message &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; suffix &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -521,7 +522,27 @@
 </ul>
 <h4 id="总结-13"><a href="#总结-13" class="headerlink" title="总结"></a>总结</h4><p>在虚函数禁止使用默认参数，虚函数调用是根据对象的动态类型确定的，默认参数值是在编译时确定的，可能会导致意外之外的行为，示例：void f(int n &#x3D; count++)每次调用时，默认参数值都会递增，可能会与期望不一致</p>
 <p>在其他情况下，使用默认参数可以提高函数声明的可读性，当不足以克服上述缺点时，使用重载</p>
-<h3 id="4-5-指定函数返回类型"><a href="#4-5-指定函数返回类型" class="headerlink" title="4.5 指定函数返回类型"></a>4.5 指定函数返回类型</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<h3 id="4-5-尾返回类型"><a href="#4-5-尾返回类型" class="headerlink" title="4.5 尾返回类型"></a>4.5 尾返回类型</h3><p>C++中可以使用尾返回类型和前置返回类型指定函数的返回类型。</p>
+<h4 id="定义-10"><a href="#定义-10" class="headerlink" title="定义"></a>定义</h4><p>C++允许两种不同形式的函数声明，旧形式为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">(<span class="type">int</span> x)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>新的声明在函数名之前使用auto关键字，参数列表后面跟尾返回类型，如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">foo</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="type">int</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="优点-12"><a href="#优点-12" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>尾返回类型是显示指定lambda表达式的返回类型的唯一方法。某些情况下，编译器能够推断出lambda表达式的返回类型，即便能够推断出，显示指定也便于代码阅读</li>
+<li>有时，在函数参数列表已经出现后，指定返回类型更容易，也更易读，示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">add</span><span class="params">(T t, U u)</span> -&gt; <span class="title">decltype</span><span class="params">(t + u)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>与之相对：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</span><br><span class="line"><span class="keyword">decltype</span>(<span class="built_in">declval</span>&lt;T&amp;&gt;() + <span class="built_in">declval</span>&lt;U&amp;&gt;()) <span class="built_in">add</span>(T t, U u);</span><br></pre></td></tr></table></figure>
+<h4 id="缺点-12"><a href="#缺点-12" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>语法较新，部分读者对此可能不熟悉、</li>
+<li>现实中使用旧语法或混合两种语法。指定单一的版本更有利于风格统一</li>
+</ul>
+<h4 id="总结-14"><a href="#总结-14" class="headerlink" title="总结"></a>总结</h4><p>大多数情况下，继续使用老的函数声明方式，只有当需要使用尾返回类型时使用，如lambda表达式。尾返回类型实际中仍然很少见</p>
+<h2 id="5-其他C-特征"><a href="#5-其他C-特征" class="headerlink" title="5. 其他C++特征"></a>5. 其他C++特征</h2><h3 id="5-1-所有权和智能指针"><a href="#5-1-所有权和智能指针" class="headerlink" title="5.1 所有权和智能指针"></a>5.1 所有权和智能指针</h3><h4 id="定义-11"><a href="#定义-11" class="headerlink" title="定义"></a>定义</h4><p>ownership是一种用于管理动态分配内存（和其他资源）的bookkeeping技术。确保每个分配的内存都有一个负责的所有者，该所有者保证在不需要内存时释放它。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <style>
 p{text-indent:2em}
