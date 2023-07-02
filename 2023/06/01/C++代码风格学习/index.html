@@ -6,15 +6,15 @@
   
   <title>C++代码风格学习 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="目录推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。其中本文不涉及命名、注释和格式的代码风格。 vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必">
+  <meta name="description" content="目录 推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。 注意在使用新特性之前，考虑移植性。 本文不涉及命名、注释和格式的代码风格。 使用cpplint检查C++代码风格和潜在问题  vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++代码风格学习">
 <meta property="og:url" content="http://example.com/2023/06/01/C++%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="目录推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。其中本文不涉及命名、注释和格式的代码风格。 vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必">
+<meta property="og:description" content="目录 推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。 注意在使用新特性之前，考虑移植性。 本文不涉及命名、注释和格式的代码风格。 使用cpplint检查C++代码风格和潜在问题  vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-06-01T01:26:20.000Z">
-<meta property="article:modified_time" content="2023-07-01T02:01:49.965Z">
+<meta property="article:modified_time" content="2023-07-02T02:43:14.864Z">
 <meta property="article:author" content="zsh">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
@@ -98,7 +98,12 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p>推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。注意在使用新特性之前，考虑移植性。其中本文不涉及命名、注释和格式的代码风格。</p>
+        <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
+<li>推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。</li>
+<li>注意在使用新特性之前，考虑移植性。</li>
+<li>本文不涉及命名、注释和格式的代码风格。</li>
+<li>使用cpplint检查C++代码风格和潜在问题</li>
+</ul>
 <p>vscode 配置 C++17：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33899456/article/details/117966490">https://blog.csdn.net/qq_33899456/article/details/117966490</a></p>
 <h2 id="1-头文件"><a href="#1-头文件" class="headerlink" title="1. 头文件"></a>1. 头文件</h2><h3 id="1-1-独立性"><a href="#1-1-独立性" class="headerlink" title="1.1 独立性"></a>1.1 独立性</h3><ul>
 <li>头文件应当是自编译（并非指的是只能包含自己），即不要在头文件中添加不必要的代码</li>
@@ -544,7 +549,43 @@
 <li>现实中使用旧语法或混合两种语法。指定单一的版本更有利于风格统一</li>
 </ul>
 <h4 id="总结-14"><a href="#总结-14" class="headerlink" title="总结"></a>总结</h4><p>大多数情况下，继续使用老的函数声明方式，只有当需要使用尾返回类型时使用，如lambda表达式。尾返回类型实际中仍然很少见</p>
-<h2 id="5-其他C-特征"><a href="#5-其他C-特征" class="headerlink" title="5. 其他C++特征"></a>5. 其他C++特征</h2><h3 id="5-1-所有权和智能指针"><a href="#5-1-所有权和智能指针" class="headerlink" title="5.1 所有权和智能指针"></a>5.1 所有权和智能指针</h3><h4 id="定义-11"><a href="#定义-11" class="headerlink" title="定义"></a>定义</h4><p>ownership是一种用于管理动态分配内存（和其他资源）的bookkeeping技术。确保每个分配的内存都有一个负责的所有者，该所有者保证在不需要内存时释放它。</p>
+<h2 id="5-其他C-特征"><a href="#5-其他C-特征" class="headerlink" title="5. 其他C++特征"></a>5. 其他C++特征</h2><h3 id="5-1-所有权和智能指针"><a href="#5-1-所有权和智能指针" class="headerlink" title="5.1 所有权和智能指针"></a>5.1 所有权和智能指针</h3><p>使用动态内存分配创建的对象，最好将所有权交给一个固定所有者</p>
+<h4 id="定义-11"><a href="#定义-11" class="headerlink" title="定义"></a>定义</h4><p>ownership是一种用于管理动态分配内存（和其他资源）的bookkeeping技术。确保每个分配的内存都有一个负责的所有者，该所有者保证在不需要内存时释放它。动态分配对象所有者是一个函数或对象，它确保在不再需要时删除该对象或函数。部分情况可以共享所有权，通常由最后一个所有者负责删除所有权</p>
+<p>智能指针是类的指针，如通过重载*和-&gt;运算符。一些智能指针类型可用于自动化所有权bookkeeping，以确保履行这些职责。unique_ptr是一种智能指针类型，它表示动态分配对象的独占所有权；当std::unique_ptr超出作用域时，该对象将被删除。它不能被复制，但可以被移动以表示所有权转移。share_ptr是一种类型的智能指针，表示动态分配对象的共享所有权。可以复制std::share_ptr，对象的所有权在所有副本之间共享，当最后一个std::share_ptr被销毁时，对象将被删除</p>
+<h4 id="优点-13"><a href="#优点-13" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>没有所有权逻辑，几乎不可能有效管理动态分配的内存</li>
+<li>转移对象的所有权可能比复制（如果可以复制）更cheap</li>
+<li>转移所有权可能比借用指针或引用更简单，它减少了在两个用户之间协调对象生命周期的需要</li>
+<li>智能指针可以通过使所有权逻辑显示化、自记录和明确化来提高可读性</li>
+<li>智能指针可以消除所有权bookkeeping，简化代码并排除大类错误</li>
+<li>对于const对象，共享所有权可以是深拷贝的一种简单、有效的替代方法</li>
+</ul>
+<h4 id="缺点-13"><a href="#缺点-13" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>所有权必须通过指针（无论普通还是智能）表示和转移。指针语义比值语义更复杂，特别是API中：不仅要考虑所有权、别名、生存期和可变性等问题</li>
+<li>价值语义的性能成本经常被高估，因此所有权转移的性能收益可能不足以证明可读性和复杂性成本的合理性</li>
+<li>转移所有权的API使客户机进行单一的内存管理模型</li>
+<li>使用智能指针的代码对于资源释放发生的位置没有那么明确</li>
+<li>std::unique_str使用move语义表示所有权转移，这是一种较新的语义</li>
+<li>共享所有权可以作为仔细的所有权设计的一种好的替代方案，混淆了系统设计</li>
+<li>共享所有权需要在运行时进行明确的bookkeeping，成本较大</li>
+<li>某些情况下，共享所有权的对象可能永远不会被删除</li>
+<li>智能指针并不是纯指针的完美替代</li>
+</ul>
+<h4 id="总结-15"><a href="#总结-15" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>如果需要动态分配内存，更愿意使用分配它的代码保持所有权。如果其他代码需要访问该对象，可以考虑传递一个副本，或传递一个指针或引用而不是转移所有权。更偏向使用std::unique_str显示进行所有权转移，示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::unique_ptr&lt;Foo&gt; <span class="title">FooFactory</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">FooConsumer</span><span class="params">(std::unique_ptr&lt;Foo&gt; ptr)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在没有充分理由的情况下，不要将代码设计为使用共享所有权。其中一个原因是为了避免代价高昂的复制操作，但是只有在性能优势显著且底层对象是不可变的（如std::share_ptr<const Foo>）时才应该这么做。如果确定使用共享所有权，应当使用std::share_ptr</li>
+<li>不要使用std::auto_ptr</li>
+</ul>
+<h3 id="5-2-右值引用"><a href="#5-2-右值引用" class="headerlink" title="5.2 右值引用"></a>5.2 右值引用</h3><h4 id="定义-12"><a href="#定义-12" class="headerlink" title="定义"></a>定义</h4><p>右值引用是一种只能绑定到临时对象的引用类型。语法类似传统的引用语法，如（void f(std::string &amp;&amp; s)）声明一个函数，参数是对std::string的右值引用</p>
+<p>在函数参数中将’&amp;&amp;’应用于未限定的模板参数时，会应用特殊的模板参数推导规则。这一引用称作转发引用</p>
+<h4 id="优点-14"><a href="#优点-14" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>定义move构造函数（一个对类类型进行右值引用的构造函数）可以移动一个值而不是复制它，如v1是一个std::vector<a href="std::string">std::string</a>，那么auto v2(std::move(v1))可能会导致一些简单的指针操作，而不会复制大量数据。许多情况下可以导致性能的很大改进</li>
+<li>右值引用可以使得实现可移动但不可复制的类型成为可能，这对于那些没有明确的复制定义但仍然希望将其作为函数参数传递、放入容器等类型非常有用</li>
+</ul>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <style>
