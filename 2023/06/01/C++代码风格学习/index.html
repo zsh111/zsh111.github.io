@@ -14,7 +14,7 @@
 <meta property="og:description" content="目录 推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。 注意在使用新特性之前，考虑移植性。 本文不涉及命名、注释和格式的代码风格。 使用cpplint检查C++代码风格和潜在问题  vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-06-01T01:26:20.000Z">
-<meta property="article:modified_time" content="2023-07-09T01:35:07.379Z">
+<meta property="article:modified_time" content="2023-07-12T00:59:10.383Z">
 <meta property="article:author" content="zsh">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
@@ -760,17 +760,111 @@
 <li>对于某些整数类型，printf()在32位和64位系统上可移植性不是很好，printf()依赖宏扩展（<cinttypes>的PRI宏）。除非有特定合理的替代方案，否则尽量避免或升级依赖printf系列的API，相反，使用支持类型安全数字格式的库，如StrCat或用于快速简单的转换的置换，或std::ostream</li>
 <li>注意sizeof(void *) !&#x3D; sizeof(int)，如果需要一个指针大小的整数，使用intptr_t</li>
 <li>注意结构体对齐，对于存储在磁盘上的结构，在64位系统上，任何带有int64_t&#x2F;uint64_t成员的类&#x2F;结构在默认情况下最终都是8字节对齐的，如果在32位和64位代码之间在磁盘上共享这样的结构，需要确保它们在这两种结构上的封装是相同的，大多数编译器都提供了一种改变结构对齐的方法，在gcc中是__attribute__((packed))，MSVC 则提供了 #pragma pack() 和 __declspec(align())</li>
-<li>根据需要使用括号初始化来创建64位常量，如：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int64_t</span> my_value&#123;<span class="number">0x123456789</span>&#125;;</span><br><span class="line"><span class="type">uint64_t</span> my_mask&#123;<span class="type">uint64_t</span>&#123;<span class="number">3</span>&#125; &lt;&lt; <span class="number">48</span>&#125;;</span><br></pre></td></tr></table></figure></li>
+<li>根据需要使用括号初始化来创建64位常量，如：</li>
 </ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int64_t</span> my_value&#123;<span class="number">0x123456789</span>&#125;;</span><br><span class="line"><span class="type">uint64_t</span> my_mask&#123;<span class="type">uint64_t</span>&#123;<span class="number">3</span>&#125; &lt;&lt; <span class="number">48</span>&#125;;</span><br></pre></td></tr></table></figure>
+
 <h3 id="5-14-预处理宏"><a href="#5-14-预处理宏" class="headerlink" title="5.14 预处理宏"></a>5.14 预处理宏</h3><ul>
 <li>避免定义宏，特别是在头文件中，更推荐用内联函数、枚举和常量变量。使用特定于项目的前缀命名宏。不要使用宏定义C++API片段</li>
 <li>宏意味着用户看到的代码和编译器看到的不一样，可能会导致意外的行为</li>
+<li>在定义C++API各个部分时，问题尤其严重。当开发人员错误使用该接口时，编译器发出的错误消息都必须解释宏是如何形成该接口的。重构和分析工具在更新新接口方面面临着巨大的困难，因此，禁止以这种方式使用宏，如下：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">class</span> <span class="title">WOMBAT_TYPE</span><span class="params">(Foo)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">EXPAND_PUBLIC_WOMBAT_API</span>(Foo)</span><br><span class="line"></span><br><span class="line">  <span class="built_in">EXPAND_WOMBAT_COMPARISONS</span>(Foo, ==, &lt;)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在C++中，宏没有那么必要，可以使用内联函数进行替代，不要使用宏存储常量，而是使用常量变量，不要使用宏缩写长变量名，使用引用，不要使用宏来有条件地编译代码…. </li>
+<li>下面是宏的相关使用规则：<ul>
+<li>不要在.h文件中定义宏</li>
+<li>在使用宏之前定义#define，之后立即取消定义宏#undef</li>
+<li>用自己的宏替代现有宏之前，不要只用#undef，建议选择一个唯一的name来命名自己的宏</li>
+<li>尽量不要使用扩展到不平衡的C++结构的宏（），如果实在需要，使用文档记录</li>
+<li>不要使用##生成函数&#x2F;类&#x2F;变量名</li>
+</ul>
+</li>
 </ul>
 <h3 id="5-15-0和nullptr-x2F-NULL"><a href="#5-15-0和nullptr-x2F-NULL" class="headerlink" title="5.15 0和nullptr&#x2F;NULL"></a>5.15 0和nullptr&#x2F;NULL</h3><ul>
 <li>指针使用nullptr，字符使用’\0’（不要使用常量0）</li>
 <li>指针使用nullptr，它提供类型安全性</li>
 </ul>
-<h3 id="5-16-sizeof"><a href="#5-16-sizeof" class="headerlink" title="5.16 sizeof"></a>5.16 sizeof</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<h3 id="5-16-sizeof"><a href="#5-16-sizeof" class="headerlink" title="5.16 sizeof"></a>5.16 sizeof</h3><ul>
+<li><strong>Tips</strong>:推荐使用sizeof(varname)替换sizeof(type)</li>
+<li>使用sizeof(varname)替代sizeof(type)，当变量类型改变时，sizeof也随之改变，示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MyStruct data;</span><br><span class="line"><span class="built_in">memset</span>(&amp;data, <span class="number">0</span>, <span class="built_in">sizeof</span>(data));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">memset</span>(&amp;data, <span class="number">0</span>, <span class="built_in">sizeof</span>(MyStruct));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (raw_size &lt; <span class="built_in">sizeof</span>(<span class="type">int</span>)) &#123;</span><br><span class="line">  <span class="built_in">LOG</span>(ERROR) &lt;&lt; <span class="string">&quot;compressed record not big enough for count: &quot;</span> &lt;&lt; raw_size;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-17-类型推导"><a href="#5-17-类型推导" class="headerlink" title="5.17 类型推导"></a>5.17 类型推导</h3><ul>
+<li><strong>Tips</strong>:用auto替换繁琐的类型名，只要可读性好就继续用，不要用在局部变量之外的地方</li>
+</ul>
+<h4 id="定义-21"><a href="#定义-21" class="headerlink" title="定义"></a>定义</h4><p>变量声明为auto，它的类型会自动匹配为初始化表达式的类型，以下是具体的使用地方</p>
+<ul>
+<li>函数模板参数推导<ul>
+<li>可以在不使用显示模板参数情况下调用函数模板。编译器从函数参数的类型中推导参数，如下示例：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T t)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(<span class="number">0</span>);  <span class="comment">// Invokes f&lt;int&gt;(0)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>变量声明<ul>
+<li>变量声明使用auto替代类型，编译器从变量初始值推导出类型，遵循函数模板参数推导相同的规则（前提是使用圆括号()而不是花括号{}）</li>
+<li>auto可以用const限定，可以用作指针或引用类型的一部分，但不能作为模板参数，使用decltype(auto)推断的类型是decltype的结果，示例：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> a = <span class="number">42</span>;  <span class="comment">// a is an int</span></span><br><span class="line"><span class="keyword">auto</span>&amp; b = a;  <span class="comment">// b is an int&amp;</span></span><br><span class="line"><span class="keyword">auto</span> c = b;   <span class="comment">// c is an int</span></span><br><span class="line"><span class="keyword">auto</span> d&#123;<span class="number">42</span>&#125;;   <span class="comment">// d is an int, not a std::initializer_list&lt;int&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(T arg)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> value = <span class="number">42</span>;</span><br><span class="line"><span class="keyword">decltype</span>(<span class="keyword">auto</span>) result = <span class="built_in">foo</span>(value); <span class="comment">// 推断为模板实例化后的类型</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>函数返回类型推导<ul>
+<li>auto和decltype（auto）也可以用来替代函数的返回类型，编译器从函数体中return语句中推断出返回类型</li>
+<li>lambda表达式返回类型也是使用同样方法推导出来，但是是通过省略返回类型而不是通过显示auto触发的，函数后面的返回类型语法在返回类型位置也使用auto，但并不依赖类型推导，只是显示返回类型的替代语法，示例：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;  <span class="comment">// The return type of f is int</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>泛用lambda表达式<ul>
+<li>lambda表达式可以使用auto关键字代替它的一个或多个参数类型，使得lambda的调用操作符成为一个函数模板，示例：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Sort `vec` in decreasing order</span></span><br><span class="line">std::<span class="built_in">sort</span>(vec.<span class="built_in">begin</span>(), vec.<span class="built_in">end</span>(), [](<span class="keyword">auto</span> lhs, <span class="keyword">auto</span> rhs) &#123; <span class="keyword">return</span> lhs &gt; rhs; &#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>lambda初始化捕获<ul>
+<li>lambda捕获可以有显示的初始化，可以用来声明全新的变量，而不仅仅是捕获现有变量，这种语法不允许指定类型，示例：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[x = <span class="number">42</span>, y = <span class="string">&quot;foo&quot;</span>] &#123; ... &#125;  <span class="comment">// x is an int, and y is a const char*</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>结构化绑定<ul>
+<li>当使用auto声明一个tuple、struct或数组时，可以为单个元素指定名称，而不是为整个对象指定名称；这些名称称为结构化绑定，这种语法无法指定封闭对象或单个名称的类型</li>
+<li>auto 也可以使用 const、 &amp; 和 &amp; &amp; 限定，但请注意，这些限定符在技术上适用于匿名 tuple&#x2F;struct&#x2F;array，而不是单个绑定。确定绑定类型的规则相当复杂</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> [iter, success] = my_map.<span class="built_in">insert</span>(&#123;key, value&#125;);</span><br><span class="line"><span class="keyword">if</span> (!success) &#123;</span><br><span class="line">  iter-&gt;second = value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="优点-24"><a href="#优点-24" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>简化C++变量声明</li>
+<li>有时候类型推导更安全，可以减少副本或类型转换</li>
+</ul>
+<h4 id="缺点-24"><a href="#缺点-24" class="headerlink" title="缺点"></a>缺点</h4><p>当类型是显式的时候，C + + 代码通常更加清晰，如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> foo = x.<span class="built_in">add_foo</span>();</span><br><span class="line"><span class="keyword">auto</span> i = y.<span class="built_in">Find</span>(key);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果 y 的类型不是很清楚，或者如果 y 在很多行之前被声明，那么结果类型是什么可能并不清楚</li>
+<li>如果一个推导出的类型被用作接口的一部分，那么程序员可能会更改它的类型，而只是打算更改它的值，从而导致比预期的更彻底的 API 更改。</li>
+</ul>
+<h4 id="总结-26"><a href="#总结-26" class="headerlink" title="总结"></a>总结</h4><p>基本规则是: 使用类型演绎只是为了使代码更清晰或更安全，而不是仅仅为了避免编写显式类型的不便</p>
+<p>这些原则适用于所有形式的类型演绎，但细节各不相同，如下面各节所述</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <p>cpplint下载和使用：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/79913216">https://zhuanlan.zhihu.com/p/79913216</a></p>
 <style>
