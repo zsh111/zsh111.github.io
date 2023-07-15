@@ -861,7 +861,56 @@
 </ul>
 <h4 id="总结-26"><a href="#总结-26" class="headerlink" title="总结"></a>总结</h4><p>基本规则是: 使用类型演绎只是为了使代码更清晰或更安全，而不是仅仅为了避免编写显式类型的不便</p>
 <p>这些原则适用于所有形式的类型演绎，但细节各不相同，如下面各节所述</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<ul>
+<li>函数模板参数推导</li>
+</ul>
+<p>使用类型推导，编译器可以根据函数模板调用时提供的函数参数自动确定模板参数的类型。简化了函数模板的使用，用户不需要在每次调用函数时显示指定模板参数</p>
+<ul>
+<li>局部变量类型推导</li>
+</ul>
+<p>对局部变量，可以使用类型推导来消除明显或不相关的类型信息，使代码更加清晰，读者可以关注代码中有意义的部分，如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;WidgetWithBellsAndWhistles&gt; widget =</span><br><span class="line">    std::<span class="built_in">make_unique</span>&lt;WidgetWithBellsAndWhistles&gt;(arg1, arg2);</span><br><span class="line">absl::flat_hash_map&lt;std::string,</span><br><span class="line">                    std::unique_ptr&lt;WidgetWithBellsAndWhistles&gt;&gt;::const_iterator</span><br><span class="line">    it = my_map_.<span class="built_in">find</span>(key);</span><br><span class="line">std::array&lt;<span class="type">int</span>, 6&gt; numbers = &#123;<span class="number">4</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">42</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> widget = std::<span class="built_in">make_unique</span>&lt;WidgetWithBellsAndWhistles&gt;(arg1, arg2);</span><br><span class="line"><span class="keyword">auto</span> it = my_map_.<span class="built_in">find</span>(key);</span><br><span class="line">std::array numbers = &#123;<span class="number">4</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">42</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>类型有时包含有用信息和模板文件的混合，如上：类型是一个迭代器，许多上下文中，容器类型甚至键类型不相关，值的类型可能是有用的。这种情况，可以用显示类型定义局部变量来传递信息，如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> it = my_map_.<span class="built_in">find</span>(key); it != my_map_.<span class="built_in">end</span>()) &#123;</span><br><span class="line">  WidgetWithBellsAndWhistles&amp; widget = *it-&gt;second;</span><br><span class="line">  <span class="comment">// Do stuff with `widget`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果一个更简单的选项可行，不要使用decltype(auto)，因为它是一个相当模糊的特性，所以在代码清晰度方面有很高成本</p>
+<ul>
+<li>返回类型推导</li>
+</ul>
+<p>应谨慎使用lambda的auto参数类型，因为实际类型是由调用lambda的代码决定的，而不是由lambda定义决定的。因此，显示类型几乎总是更清晰的，除非lambda被显式调用的位置非常接近它的定义位置，或者lambda被传递到一个接口，所以很明显它最终将用什么参数来调用（如上面的std::sort()）</p>
+<ul>
+<li>lambda初始化捕获</li>
+</ul>
+<p>初始化捕获由更具体的样式规则覆盖，它很大程度取代了类型推到的一般规则</p>
+<ul>
+<li>结构化绑定</li>
+</ul>
+<p>与其他类型推导不同，结构化绑定实际上可以通过给较大对象的元素赋予有意义的名称给读者提供额外信息。这意味着结构化绑定声明可以提供比显式类型更好的可读性，即使在auto不能提供可读性的情况也是如此。结构化绑定在对象是pair或tuple时特别有用，它们开始时没有有意义的字段名，但要注意，通常不该用pair或tuple，除非预先存在的API强制这样做</p>
+<p>如果绑定的对象是一个struct，那么有时候提供更具体的名称可能会有所帮助，但要记得，意味着对读者来说，名称比字段名称更难识别。建议使用注释来指定基础字段的名称，使用与函数参数注释相同的语法，如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> [<span class="comment">/*field_name1=*/</span>bound_name1, <span class="comment">/*field_name2=*/</span>bound_name2] = ...</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-18-类模板参数推导"><a href="#5-18-类模板参数推导" class="headerlink" title="5.18 类模板参数推导"></a>5.18 类模板参数推导</h3><p>类模板参数推导只能在明确选择支持该特性的模板中使用</p>
+<h4 id="定义-22"><a href="#定义-22" class="headerlink" title="定义"></a>定义</h4><ul>
+<li>类模板参数推导（CTAD）发生在一个变量声明了一个命名模板的类型，并且没有提供模板参数列表。示例：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::array a = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;  <span class="comment">// `a` is a std::array&lt;int, 3&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编译器使用模板的推导从初始化中推导参数，这些推导可以是显式或隐式的</li>
+<li>显示推导看起来像是带有尾返回类型的函数声明，只是没有前导auto，而且函数名是模板的名称。如上面std::array的推导指南，如下：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std &#123;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="keyword">class</span>... U&gt;</span><br><span class="line"><span class="built_in">array</span>(T, U...) -&gt; std::array&lt;T, 1 + <span class="keyword">sizeof</span>...(U)&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>主模板中的构造函数也隐式定义了推导指南</li>
+<li>当声明一个依赖CTAD的变量时，编译器使用构造函数重载解析规则选择一个推断指南，并且该指南的返回类型将成为变量的类型</li>
+</ul>
+<h4 id="优点-25"><a href="#优点-25" class="headerlink" title="优点"></a>优点</h4><p>CTAD有时允许从代码中省略样板文件</p>
+<h4 id="缺点-25"><a href="#缺点-25" class="headerlink" title="缺点"></a>缺点</h4><h3 id="5-19-指定初始化器"><a href="#5-19-指定初始化器" class="headerlink" title="5.19 指定初始化器"></a>5.19 指定初始化器</h3><p>只使用C++20的指定初始值设定项</p>
+<h3 id="5-20-lambda表达式"><a href="#5-20-lambda表达式" class="headerlink" title="5.20 lambda表达式"></a>5.20 lambda表达式</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <p>cpplint下载和使用：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/79913216">https://zhuanlan.zhihu.com/p/79913216</a></p>
 <style>
