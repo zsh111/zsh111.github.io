@@ -14,7 +14,7 @@
 <meta property="og:description" content="目录 推荐使用 C++17，GCC 版本从 7.1 开始支持 C++17。 注意在使用新特性之前，考虑移植性。 本文不涉及命名、注释和格式的代码风格。 使用cpplint检查C++代码风格和潜在问题  vscode 配置 C++17：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_33899456&#x2F;article&#x2F;details&#x2F;117966490 1. 头文件1.1 独立性 头文件应当是自编译">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-06-01T01:26:20.000Z">
-<meta property="article:modified_time" content="2023-07-15T04:07:31.772Z">
+<meta property="article:modified_time" content="2023-07-16T09:01:06.398Z">
 <meta property="article:author" content="zsh">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
@@ -912,8 +912,78 @@
 <li>当声明一个依赖CTAD的变量时，编译器使用构造函数重载解析规则选择一个推断指南，并且该指南的返回类型将成为变量的类型</li>
 </ul>
 <h4 id="优点-25"><a href="#优点-25" class="headerlink" title="优点"></a>优点</h4><p>CTAD有时允许从代码中省略样板文件</p>
-<h4 id="缺点-25"><a href="#缺点-25" class="headerlink" title="缺点"></a>缺点</h4><h3 id="5-19-指定初始化器"><a href="#5-19-指定初始化器" class="headerlink" title="5.19 指定初始化器"></a>5.19 指定初始化器</h3><p>只使用C++20的指定初始值设定项</p>
-<h3 id="5-20-lambda表达式"><a href="#5-20-lambda表达式" class="headerlink" title="5.20 lambda表达式"></a>5.20 lambda表达式</h3><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
+<h4 id="缺点-25"><a href="#缺点-25" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>在C++17引入CTAD之前编写的构造函数可能会生成不良行为或明显错误的隐式推断指南。对于早期的构造函数的作者无法了解他们的构造函数对CTAD可能会造成的任何问题。为了修复这些问题，添加显示推断指南可能会破坏依赖于隐式推断指南的现有代码</li>
+<li>CTAD还有许多与auto相同的缺点</li>
+</ul>
+<h4 id="总结-27"><a href="#总结-27" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>不要使用给定模板的CTAD，除非模板的维护者提供至少一个明确的显示推断指南。同时默认假设std命令空间中所有模板都选择支持CTAD。</li>
+<li>使用CTAD必须遵循类型推导的规则</li>
+</ul>
+<h3 id="5-19-指定初始化器"><a href="#5-19-指定初始化器" class="headerlink" title="5.19 指定初始化器"></a>5.19 指定初始化器</h3><p>只使用C++20的指定初始值设定项</p>
+<h4 id="定义-23"><a href="#定义-23" class="headerlink" title="定义"></a>定义</h4><p>指定初始化器是一种语法，允许通过显示命令聚合的字段来初始化，如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">  <span class="type">float</span> x = <span class="number">0.0</span>;</span><br><span class="line">  <span class="type">float</span> y = <span class="number">0.0</span>;</span><br><span class="line">  <span class="type">float</span> z = <span class="number">0.0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Point p = &#123;</span><br><span class="line">  .x = <span class="number">1.0</span>,</span><br><span class="line">  .y = <span class="number">2.0</span>,</span><br><span class="line">  <span class="comment">// z will be 0.0</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>显示列出的字段将按指定方式初始化，其他字段将按与传统聚合初始化表达式（如Point{1.0,2.0}）相同的方式初始化</p>
+<h4 id="优点-26"><a href="#优点-26" class="headerlink" title="优点"></a>优点</h4><p>指定的初始值设定项可以使聚合表达式变得方便和高度可读，特别是对复杂的结构</p>
+<h4 id="缺点-26"><a href="#缺点-26" class="headerlink" title="缺点"></a>缺点</h4><p>C + + 标准中的规则比 C 和编译器扩展中的规则更严格，要求指定的初始值设定项的出现顺序与结构定义中字段的出现顺序相同。所以在上面的例子中，根据 C + + 20，初始化 x 然后 z 是合法的，但是初始化 y 然后 x 是不合法的。</p>
+<h4 id="总结-28"><a href="#总结-28" class="headerlink" title="总结"></a>总结</h4><p>只在与 C + + 20标准兼容的形式中使用指定的初始值设定项: 初始值设定项的顺序与结构定义中出现的相应字段的顺序相同</p>
+<h3 id="5-20-lambda表达式"><a href="#5-20-lambda表达式" class="headerlink" title="5.20 lambda表达式"></a>5.20 lambda表达式</h3><ul>
+<li><strong>Tips</strong>:在适当的地方使用lambda表达式，当lambda将逃逸当前作用域，使用显示捕获</li>
+</ul>
+<h4 id="定义-24"><a href="#定义-24" class="headerlink" title="定义"></a>定义</h4><p>Lambda 表达式是创建匿名函数对象的一种简明方法。当将函数作为参数传递时，它们通常很有用。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">sort</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), [](<span class="type">int</span> x, <span class="type">int</span> y) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Weight</span>(x) &lt; <span class="built_in">Weight</span>(y);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>它们还允许显式地通过名称或隐式地使用默认捕获从封闭范围捕获变量。显式捕获要求列出每个变量，作为值或引用捕获:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> weight = <span class="number">3</span>;</span><br><span class="line"><span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// Captures `weight` by value and `sum` by reference.</span></span><br><span class="line">std::for_each(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), [weight, &amp;sum](<span class="type">int</span> x) &#123;</span><br><span class="line">  sum += weight * x;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>默认捕获隐式捕获 lambda 主体中引用的任何变量，如果使用了任何成员，则包括:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> std::vector&lt;<span class="type">int</span>&gt; lookup_table = ...;</span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; indices = ...;</span><br><span class="line"><span class="comment">// Captures `lookup_table` by reference, sorts `indices` by the value</span></span><br><span class="line"><span class="comment">// of the associated element in `lookup_table`.</span></span><br><span class="line">std::<span class="built_in">sort</span>(indices.<span class="built_in">begin</span>(), indices.<span class="built_in">end</span>(), [&amp;](<span class="type">int</span> a, <span class="type">int</span> b) &#123;</span><br><span class="line">  <span class="keyword">return</span> lookup_table[a] &lt; lookup_table[b];</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>变量捕获还可以有一个显式的初始值设定项，它可以用于按值捕获仅移动变量，或者用于普通引用或值捕获不能处理的其他情况:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;Foo&gt; foo = ...;</span><br><span class="line">[foo = std::<span class="built_in">move</span>(foo)] () &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样的捕获(通常称为“ init 捕获”或“广义 lambda 捕获”)实际上不需要从封闭范围中“捕获”任何东西，甚至不需要从封闭范围中获得名称; 这种语法是定义 lambda 对象成员的一种完全通用的方法:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[foo = std::<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;)] () &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>带有初始化器的捕获变量的类型推导规则与auto使用相同的规则</p>
+<h4 id="优点-27"><a href="#优点-27" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>传函数给STL算法，lambda更简单，可读性好</li>
+<li>适当使用默认捕获可以消除冗余并突出显示默认情况下的重要异常</li>
+<li>lambda、std::function和std::bind可以组合使用，作为一种通用的回调机制；使得编写将绑定函数作为参数的函数变得容易</li>
+</ul>
+<h4 id="缺点-27"><a href="#缺点-27" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>lambda表达式中变量捕获可能是悬空指针错误的源头</li>
+<li>lambda可能会失控，层层嵌套的匿名函数难以阅读</li>
+</ul>
+<h4 id="总结-29"><a href="#总结-29" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>在适当地方使用lambda表达式，格式如下：</li>
+<li>如果lambda可能逃脱当前作用域，更喜欢使用显示捕获，如下：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  Foo foo;</span><br><span class="line">  ...</span><br><span class="line">  executor-&gt;<span class="built_in">Schedule</span>([&amp;] &#123; <span class="built_in">Frobnicate</span>(foo); &#125;)</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// BAD! The fact that the lambda makes use of a reference to `foo` and</span></span><br><span class="line"><span class="comment">// possibly `this` (if `Frobnicate` is a member function) may not be</span></span><br><span class="line"><span class="comment">// apparent on a cursory inspection. If the lambda is invoked after</span></span><br><span class="line"><span class="comment">// the function returns, that would be bad, because both `foo`</span></span><br><span class="line"><span class="comment">// and the enclosing object could have been destroyed.</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  Foo foo;</span><br><span class="line">  ...</span><br><span class="line">  executor-&gt;<span class="built_in">Schedule</span>([&amp;foo] &#123; <span class="built_in">Frobnicate</span>(foo); &#125;)</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// BETTER - The compile will fail if `Frobnicate` is a member</span></span><br><span class="line"><span class="comment">// function, and it&#x27;s clearer that `foo` is dangerously captured by</span></span><br><span class="line"><span class="comment">// reference.</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>只有当 lambda 的生命周期明显短于任何潜在捕获时，才使用引用默认捕获([ &amp; ])</li>
+<li>使用默认值捕获([ &#x3D; ])仅仅作为绑定一个短 lambda 的几个变量的方法，其中捕获的变量集一目了然，并且不会导致隐式捕获这个变量集。</li>
+<li>仅使用捕获来实际捕获来自封闭范围的变量。不要使用带有初始值设定项的捕获来引入新名称，或者实质上更改现有名称的含义</li>
+<li>有关指定参数和返回类型的指导，请参阅类型推导一节</li>
+</ul>
+<h3 id="5-21-模板元编程"><a href="#5-21-模板元编程" class="headerlink" title="5.21 模板元编程"></a>5.21 模板元编程</h3><ul>
+<li><strong>Tips</strong>:避免复杂的模板编程</li>
+</ul>
+<h4 id="定义-25"><a href="#定义-25" class="headerlink" title="定义"></a>定义</h4><p>模板元编程是一种利用C++模板实例化机制进行编译时计算的技术，模板元编程的主要优势在于能够在编译时进行静态计算，避免了运行时的开销，并能够实现更高度的抽象和泛化</p>
+<h4 id="优点-28"><a href="#优点-28" class="headerlink" title="优点"></a>优点</h4><p>模板超编程允许非常灵活的界面，类型安全和高性能。像 GoogleTest、 std: : tuple、 std: : function 和 Boost 这样的工具。</p>
+<h4 id="缺点-28"><a href="#缺点-28" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>以复杂方式使用模板的代码通常是不可读的，并且难以调试或维护。</li>
+<li>模板元编程干扰了大规模的重构，使得重构工具的工作更加困难。首先，模板代码在多个上下文中展开，很难验证转换是否在所有上下文中都有意义</li>
+</ul>
+<h4 id="总结-30"><a href="#总结-30" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>模板编程最好只用在少量的基础组件, 基础数据结构上, 因为模板带来的额外的维护成本会被大量的使用给分担掉</li>
+<li>如果你使用模板编程, 你必须考虑尽可能的把复杂度最小化, 并且尽量不要让模板对外暴露. 你最好只在实现里面使用模板, 然后给用户暴露的接口里面并不使用模板, 这样能提高你的接口的可读性. 并且你应该在这些使用模板的代码上写尽可能详细的注释. 你的注释里面应该详细的包含这些代码是怎么用的, 这些模板生成出来的代码大概是什么样子的. 还需要额外注意在用户错误使用你的模板代码的时候需要输出更人性化的出错信息.</li>
+</ul>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>谷歌 C++指南：<a target="_blank" rel="noopener" href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a></p>
 <p>ChatGPT：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></p>
 <p>cpplint下载和使用：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/79913216">https://zhuanlan.zhihu.com/p/79913216</a></p>
 <style>
